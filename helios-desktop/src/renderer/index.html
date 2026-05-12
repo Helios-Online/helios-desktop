@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>Helios Desktop</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: #16213e;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #0f3460;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      color: #e94560;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #666;
+    }
+
+    .status-dot.running { background: #4ade80; }
+    .status-dot.stopped { background: #facc15; }
+    .status-dot.error { background: #ef4444; }
+    .status-dot.installing { background: #3b82f6; }
+    .status-dot.not_installed { background: #666; }
+
+    .main-content {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .panel {
+      background: #16213e;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .panel-header {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .status-display {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .large-status-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .large-status-dot.running { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+    .large-status-dot.stopped { background: rgba(250, 204, 21, 0.2); color: #facc15; }
+    .large-status-dot.error { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .large-status-dot.installing { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .large-status-dot.not_installed { background: rgba(102, 102, 102, 0.2); color: #666; }
+
+    .status-info h2 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .status-info p {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #e94560;
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #d63d56;
+    }
+
+    .btn-secondary {
+      background: #0f3460;
+      color: white;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #1a4a7a;
+    }
+
+    .btn-success {
+      background: #22c55e;
+      color: white;
+    }
+
+    .btn-success:hover:not(:disabled) {
+      background: #16a34a;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+
+    .progress-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .progress-modal.active {
+      display: flex;
+    }
+
+    .progress-content {
+      background: #16213e;
+      padding: 32px;
+      border-radius: 12px;
+      width: 400px;
+      text-align: center;
+    }
+
+    .progress-content h3 {
+      margin-bottom: 24px;
+    }
+
+    .progress-bar-container {
+      background: #0f3460;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #e94560;
+      transition: width 0.3s;
+    }
+
+    .progress-info {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .logs-panel {
+      max-height: 200px;
+      overflow-y: auto;
+      background: #0f3460;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+
+    .port-info {
+      margin-top: 12px;
+      padding: 12px;
+      background: #0f3460;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Helios Desktop</h1>
+    <div class="status-indicator">
+      <span class="status-dot" id="headerStatusDot"></span>
+      <span id="headerStatusText">Checking...</span>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="panel">
+      <div class="panel-header">Agent Status</div>
+      <div class="status-display">
+        <div class="large-status-dot" id="statusDot">?</div>
+        <div class="status-info">
+          <h2 id="statusTitle">Checking...</h2>
+          <p id="statusDescription">Please wait</p>
+        </div>
+      </div>
+      <div class="button-group" id="buttonGroup">
+        <button class="btn-primary" id="installBtn">Install Hermes Agent</button>
+      </div>
+      <div class="port-info" id="portInfo" style="display: none;">
+        Listening on port: <strong id="portNumber">-</strong>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">Logs</div>
+      <button class="btn-secondary" id="refreshLogsBtn" style="margin-bottom: 12px;">Refresh Logs</button>
+      <div class="logs-panel" id="logsPanel">No logs available</div>
+    </section>
+  </main>
+
+  <div class="progress-modal" id="progressModal">
+    <div class="progress-content">
+      <h3 id="progressTitle">Installing...</h3>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+      </div>
+      <p class="progress-info" id="progressInfo">Starting download...</p>
+    </div>
+  </div>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>
