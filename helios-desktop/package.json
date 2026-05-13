@@ -23,13 +23,14 @@
   "dependencies": {
     "electron-log": "^5.1.7",
     "electron-squirrel-startup": "^1.0.1",
-    "node-windows": "^1.0.0-beta.8",
-    "node-mac": "^1.0.1",
-    "node-linux": "^0.1.0",
     "tar-fs": "^2.1.1",
     "unzipper": "^0.10.14",
-    "adm-zip": "^0.5.10",
-    "crypto": "^1.0.1"
+    "adm-zip": "^0.5.10"
+  },
+  "optionalDependencies": {
+    "node-windows": "^1.0.0-beta.8",
+    "node-mac": "^1.0.1",
+    "node-linux": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

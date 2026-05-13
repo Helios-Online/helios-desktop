@@ -56,7 +56,7 @@ async function extractArchive(
     onProgress?.('Extracting archive...');
     await new Promise<void>((resolve, reject) => {
       createReadStream(archivePath)
-        .pipe(tar.extract({ path: destination }))
+        .pipe(tar.extract(destination))
         .on('finish', () => resolve())
         .on('error', reject);
     });
@@ -209,7 +209,7 @@ async function registerWindowsService(installPaths: InstallationPaths, executabl
       resolve();
     });
 
-    service.on('error', (err) => {
+    service.on('error', (err: Error) => {
       log.error('Windows service error:', err);
       reject(err);
     });

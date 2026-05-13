@@ -1,0 +1,54 @@
+# 只跟踪代码和 README 文件，其他都忽略
+# Only track code and README files, ignore everything else
+
+# Ignore everything by default
+*
+
+# Allow directory traversal
+!*/
+
+# Source code
+!**/*.ts
+!**/*.tsx
+!**/*.js
+!**/*.mjs
+!**/*.cjs
+!**/*.html
+!**/*.css
+!**/*.scss
+!**/*.json
+!**/*.yaml
+!**/*.yml
+
+# Documentation
+!**/*.md
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build output
+dist/
+build/
+out/
+target/
+*.js.map
+
+# Generated JS files (compiled from TS sources, not actual source code)
+**/src/**/*.js
+
+# Lock files (generated, not code)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -38,7 +38,7 @@ function createTray(): void {
     ? path.join(__dirname, '../../resources/tray-icon.png')
     : path.join(process.resourcesPath, 'tray-icon.png');
 
-  let trayIcon: nativeImage;
+  let trayIcon: Electron.NativeImage;
   try {
     trayIcon = nativeImage.createFromPath(iconPath);
     if (trayIcon.isEmpty()) {
