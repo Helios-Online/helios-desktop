@@ -58,7 +58,9 @@
       "target": [
         "nsis"
       ],
-      "icon": "resources/icon.ico"
+      "icon": "resources/icon.ico",
+      "certificateSubjectName": "",
+      "signDlls": false
     },
     "mac": {
       "target": [

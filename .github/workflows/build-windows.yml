@@ -23,8 +23,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Windows package
-        run: npm run dist:win
+      - name: Build and package
+        run: |
+          npm run build
+          npx electron-builder --win --x64 2>&1
 
       - uses: actions/upload-artifact@v4
         with:
