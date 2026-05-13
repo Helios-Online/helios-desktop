@@ -2,7 +2,7 @@
   "name": "helios-desktop",
   "version": "0.1.0",
   "description": "Helios Desktop - One-click Hermes Agent installation and management",
-  "main": "dist/main/index.js",
+  "main": "dist/main/main/index.js",
   "author": "Helios Team",
   "license": "MIT",
   "scripts": {
