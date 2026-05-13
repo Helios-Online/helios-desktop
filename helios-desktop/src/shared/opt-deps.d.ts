@@ -6,12 +6,11 @@ declare module 'node-windows' {
     nodeOptions?: string[];
     logpath?: string;
   }
-  interface Service {
-    on(event: 'install', listener: () => void): this;
-    on(event: 'error', listener: (err: Error) => void): this;
+  interface ServiceHandle {
+    on(event: string, listener: (...args: any[]) => void): this;
   }
-  const Service: new (config: ServiceConfig) => Service;
-  export { Service, ServiceConfig };
+  const Service: new (config: ServiceConfig) => ServiceHandle;
+  export = Service;
 }
 
 declare module 'node-mac' {
