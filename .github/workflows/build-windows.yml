@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: windows-2022
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: false
 
     defaults:
       run:
@@ -23,24 +25,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build TypeScript
-        run: npm run build
+      - name: Verify electron-builder
+        run: npx electron-builder --version
 
-      - name: Package Windows
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Continue'
-          npx electron-builder --win 2>&1 | Tee-Object -FilePath ../build-output.log
-          if ($LASTEXITCODE -ne 0) {
-            Write-Output "BUILD_FAILED_WITH_EXITCODE=$LASTEXITCODE"
-            exit $LASTEXITCODE
-          }
+      - name: Build and package
+        run: npm run dist:win 2>&1 | Out-File -FilePath $env:GITHUB_WORKSPACE\build.log -Encoding utf8
 
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: build-logs
-          path: build-output.log
+          path: build.log
 
       - uses: actions/upload-artifact@v4
         with:
