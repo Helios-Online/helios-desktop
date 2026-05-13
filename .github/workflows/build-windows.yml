@@ -28,20 +28,10 @@ jobs:
       - name: Build app
         run: npm run build
 
-      - name: Check environment
-        run: |
-          echo "Node: $(node --version)"
-          echo "NPM: $(npm --version)"
-          echo "CWD: $(pwd)"
-          echo "Dist files:"; Get-ChildItem -Recurse dist/main/*.js | Select-Object -ExpandProperty Name
-          echo "Electron-builder:"; node -e "console.log(require.resolve('electron-builder'))"
-          echo "Electron:"; node -e "console.log(require.resolve('electron'))"
-
       - name: Package Windows
-        run: node node_modules/electron-builder/cli.js --win --x64
+        run: node node_modules/electron-builder/cli.js --win
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: helios-desktop-windows
           path: helios-desktop/release/
