@@ -3,8 +3,6 @@ name: Build Windows
 on:
   push:
     branches: [master]
-    paths:
-      - 'helios-desktop/**'
   workflow_dispatch:
 
 jobs:
