@@ -193,7 +193,7 @@ function getExecutableName(platform: 'windows' | 'mac' | 'linux'): string {
 
 async function registerWindowsService(installPaths: InstallationPaths, executablePath: string): Promise<void> {
   const { exec } = await import('child_process');
-  const Service = await import('node-windows');
+  const { Service } = await import('node-windows');
 
   return new Promise((resolve, reject) => {
     const service = new Service({

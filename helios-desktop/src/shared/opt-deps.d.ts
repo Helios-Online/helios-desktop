@@ -8,9 +8,19 @@ declare module 'node-windows' {
   }
   interface ServiceHandle {
     on(event: string, listener: (...args: any[]) => void): this;
+    install(): void;
+    start(): void;
+    stop(): void;
+    uninstall(): void;
   }
-  const Service: new (config: ServiceConfig) => ServiceHandle;
-  export = Service;
+  interface NodeWindows {
+    Service: new (config: ServiceConfig) => ServiceHandle;
+    EventLogger: new (config: { source: string }) => void;
+    elevate(cmd: string, options?: Record<string, unknown>, callback?: () => void): void;
+    sudo(cmd: string, options?: Record<string, unknown>, callback?: () => void): void;
+  }
+  const nw: NodeWindows;
+  export = nw;
 }
 
 declare module 'node-mac' {
