@@ -1,0 +1,36 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'helios-desktop/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        working-directory: helios-desktop
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: helios-desktop/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Windows package
+        run: npm run dist:win
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: helios-desktop-windows
+          path: helios-desktop/release/
